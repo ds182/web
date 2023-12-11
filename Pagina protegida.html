@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Protegida</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        input {
+            padding: 10px;
+        }
+
+        button {
+            padding: 10px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        #formulario {
+            display: block;
+        }
+
+        #contenido {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Página Protegida</h1>
+    </header>
+
+    <main>
+        <!-- Formulario de contraseña -->
+        <div id="formulario">
+            <p>Ingresa la contraseña para acceder:</p>
+            <input type="password" id="passwordInput">
+            <button onclick="verificarContrasena()">Acceder</button>
+        </div>
+
+        <!-- Contenido que se mostrará después de ingresar la contraseña -->
+        <div id="contenido">
+            <h2>Bienvenido al Contenido Protegido</h2>
+            <p>Aquí puedes colocar tu contenido deseado.</p>
+            
+            <!-- Botones para redirigir a las páginas web -->
+            <button onclick="irAPagina('video1modulo1asicoA.html')">Video del modulo 1</button>
+            <button onclick="irAPagina('pagina2.html')">Ir a Página 2</button>
+            <button onclick="irAPagina('pagina3.html')">Ir a Página 3</button>
+        </div>
+    </main>
+
+    <script>
+        function verificarContrasena() {
+            var passwordInput = document.getElementById('passwordInput').value;
+            var formularioDiv = document.getElementById('formulario');
+            var contenidoDiv = document.getElementById('contenido');
+            
+            if (passwordInput === '123123') {
+                formularioDiv.style.display = 'none';  // Oculta el formulario
+                contenidoDiv.style.display = 'block'; // Muestra el contenido
+            } else {
+                alert('Contraseña incorrecta. Inténtalo de nuevo.');
+            }
+        }
+
+        // Función para redirigir a una página web
+        function irAPagina(pagina) {
+            window.location.href = pagina;
+        }
+    </script>
+
+</body>
+</html>
