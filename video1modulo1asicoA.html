@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Práctica de Listening</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #ecf0f1;
+    }
+
+    header {
+      background-color: #3498db;
+      padding: 20px 0;
+      text-align: center;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    #logo-container {
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+    }
+
+    #logo-container img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    #menu-icon {
+      font-size: 28px;
+      cursor: pointer;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      max-width: 1200px;
+      width: 100%;
+      margin: 20px auto;
+    }
+
+    #video-info-container {
+      display: flex;
+    }
+
+    #video-container {
+      position: relative;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      flex: 1;
+    }
+
+    #video-container iframe {
+      width: 100%;
+      height: 400px;
+      border: 0;
+    }
+
+    #info-container {
+      background-color: #f8f9fa;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-left: 20px;
+      width: 300px;
+    }
+
+    #info-container p {
+      margin: 0;
+    }
+
+    #button-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .button {
+      padding: 10px;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: #2c3e50;
+    }
+
+    #note-slider {
+      margin-top: 20px;
+      overflow-y: auto;
+      max-height: 300px;
+    }
+
+    .note {
+      display: none;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #3498db;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .note:hover {
+      background-color: #2c3e50;
+    }
+
+    @media screen and (max-width: 768px) {
+      #video-container iframe {
+        height: 250px;
+      }
+
+      #video-info-container {
+        flex-direction: column;
+      }
+
+      #info-container {
+        margin-left: 0;
+        margin-top: 20px;
+        width: 100%;
+      }
+    }
+
+    .notes-hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div id="logo-container">
+      <img src="https://i.imgur.com/Cnd7nRH.png" alt="Escudo Escolar">
+    </div>
+    <h1>Práctica de Listening</h1>
+    <span id="menu-icon">☰</span>
+  </header>
+
+  <main>
+    <div id="video-info-container">
+      <div id="video-container">
+        <iframe
+          id="player"
+          width="100%"
+          height="400"
+          src="https://www.youtube.com/embed/bFqeYK96JXc?autoplay=1&enablejsapi=1"
+          frameborder="0"
+          allowfullscreen
+        ></iframe>
+      </div>
+
+      <div id="info-container">
+        <p>Transcribe los subtitulos "inglès - español" en tu libreta y compartelos con el profesor para que pueda sellar tu trabajo; al tener tu trabajo sellado subelo directamente a la plataforma en el apartado llamado:  Actividad de listening 1 - subtitulos </p>
+      </div>
+    </div>
+
+    <div id="button-container">
+      <button class="button" onclick="toggleNotesVisibility()">Mostrar Notas</button>
+      <button class="button" onclick="prevNote()">Nota Anterior</button>
+      <button class="button" onclick="nextNote()">Siguiente Nota</button>
+    </div>
+
+    <div id="note-slider" class="notes-hidden">
+      <div class="note" data-start-time="0" data-end-time="2">Ah, mira, mira, they're setting up for tonight!<p>¡Ah, mira, mira, se están preparando para esta noche!</p></div>
+      <div class="note" data-start-time="2" data-end-time="5">The music competition for Día de Muertos!<p>¡El concurso de música para el Día de Muertos!</p></div>
+      <div class="note" data-start-time="5" data-end-time="7">You wanna be like your hero?<p>¿Quieres ser como tu héroe?</p></div>
+      <div class="note" data-start-time="7" data-end-time="8">You should sign up!<p>¡Deberías registrarte!</p></div>
+      <div class="note" data-start-time="8" data-end-time="9">Huh-uh.<p>No.</p></div>
+      <div class="note" data-start-time="9" data-end-time="11">My family would freak!<p>¡Mi familia se volvería loca!</p></div>
+      <div class="note" data-start-time="11" data-end-time="13">Look, if you're too scared, then well...<p>Mira, si estás demasiado asustado, bueno...</p></div>
+      <div class="note" data-start-time="13" data-end-time="15">Have fun making shoes.<p>Diviértete haciendo zapatos.</p></div>
+      <div class="note" data-start-time="15" data-end-time="18">Come on, what did de la Cruz always say?<p>Vamos, ¿qué decía siempre De la Cruz?</p></div>
+      <div class="note" data-start-time="18" data-end-time="21">"Seize your moment?"<p>"¿Aprovecha tu momento?"</p></div>
+      <div class="note" data-start-time="21" data-end-time="25">Show me what you got, muchacho.<p>Muéstrame lo que tienes, muchacho.</p></div>
+      <div class="note" data-start-time="25" data-end-time="29">I'll be your first audience.<p>Seré tu primera audiencia.</p></div>
+      <div class="note" data-start-time="29" data-end-time="109">A partir de aqui ya no hay subtitulos porque el objetivo es que trates de entender lo que dice.<p>------</p></div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2023 Práctica de Listening</p>
+  </footer>
+
+  <script>
+    let player;
+    let currentNoteIndex = 0;
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '400',
+        width: '100%',
+        videoId: 'bFqeYK96JXc',
+        playerVars: {
+          'autoplay': 1,
+          'controls': 1,
+          'showinfo': 0,
+          'mute': 0,
+          'iv_load_policy': 3,
+          'loop': 1
+        },
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      event.target.playVideo();
+      setInterval(syncSlider, 1000);
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.ENDED) {
+        player.seekTo(0);
+        player.playVideo();
+      }
+    }
+
+    function seekVideo(time) {
+      player.seekTo(time);
+    }
+
+    function syncSlider() {
+      const currentTime = player.getCurrentTime();
+      const notes = document.querySelectorAll('.note');
+      notes.forEach((note, index) => {
+        const noteStartTime = parseInt(note.getAttribute('data-start-time'));
+        const noteEndTime = parseInt(note.getAttribute('data-end-time'));
+        if (currentTime >= noteStartTime && currentTime <= noteEndTime) {
+          showNoteHighlight(note);
+          currentNoteIndex = index;
+        } else {
+          hideNoteHighlight(note);
+        }
+      });
+    }
+
+    function showNoteHighlight(note) {
+      note.style.display = 'block';
+      note.style.backgroundColor = '#e74c3c';
+    }
+
+    function hideNoteHighlight(note) {
+      note.style.display = 'none';
+      note.style.backgroundColor = '#3498db';
+    }
+
+    function toggleNotesVisibility() {
+      const noteSlider = document.getElementById('note-slider');
+      const button1 = document.querySelectorAll('.button')[0];
+      const isHidden = noteSlider.classList.contains('notes-hidden');
+
+      if (isHidden) {
+        noteSlider.classList.remove('notes-hidden');
+        button1.innerText = 'Ocultar Notas';
+      } else {
+        noteSlider.classList.add('notes-hidden');
+        button1.innerText = 'Mostrar Notas';
+      }
+    }
+
+    function nextNote() {
+      const notes = document.querySelectorAll('.note');
+      hideNoteHighlight(notes[currentNoteIndex]);
+      currentNoteIndex = (currentNoteIndex + 1) % notes.length;
+      showNoteHighlight(notes[currentNoteIndex]);
+      seekVideo(parseInt(notes[currentNoteIndex].getAttribute('data-start-time')));
+    }
+
+    function prevNote() {
+      const notes = document.querySelectorAll('.note');
+      hideNoteHighlight(notes[currentNoteIndex]);
+      currentNoteIndex = (currentNoteIndex - 1 + notes.length) % notes.length;
+      showNoteHighlight(notes[currentNoteIndex]);
+      seekVideo(parseInt(notes[currentNoteIndex].getAttribute('data-start-time')));
+    }
+
+    document.querySelectorAll('.note').forEach(note => {
+      note.addEventListener('click', () => {
+        const time = parseInt(note.getAttribute('data-start-time'));
+        seekVideo(time);
+      });
+    });
+
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  </script>
+
+</body>
+
+</html>
