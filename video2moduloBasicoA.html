@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práctica de Listening</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS';
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a; /* Fondo oscuro */
+            color: #fff; /* Texto blanco */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+                     
+        h1 {
+            font-family: 'Comic Sans MS'; /* Se elimina el tipo de fuente cursive */
+            font-style: italic; /* Se agrega la propiedad para cursiva */
+            font-weight: bold; /* Se mantiene la negrita */
+            color: #ec1502;
+            margin-bottom: 20px;
+            background-color: #f8e1fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        #video-container {
+            width: 500px;
+            height: 281px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        #player {
+            width: 100%;
+            height: 100%;
+        }
+
+        #progress-bar {
+            display: none;
+            width: 80%;
+            max-width: 800px;
+            height: 8px;
+            background-color: #ff6f61;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        #progress {
+            width: 0;
+            height: 100%;
+            background-color: #ddd;
+            transition: width 0.3s ease;
+        }
+
+        #current-time {
+            display: none;
+            margin-top: 5px;
+            font-size: 14px;
+            color: #555;
+            text-align: center;
+        }
+
+        #custom-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        #custom-controls button {
+            cursor: pointer;
+            margin: 0 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #ff6f61;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        #custom-controls button:hover {
+            background-color: #ff4f40;
+        }
+
+        .info-container {
+            display: none;
+            width: 80%;
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #04f8f8;
+            color: #aa0505;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-container h2 {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .info-container p {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>LISTENING</h1>
+
+    <div id="video-container">
+        <div id="player"></div>
+    </div>
+
+    <div id="progress-bar">
+        <div id="progress"></div>
+    </div>
+    <div id="current-time">0:00</div>
+
+    <div id="info-container1" class="info-container">
+        <div>
+            <h2>hey</h2>
+            <p>hey</p>
+        </div>
+    </div>
+
+    <div id="info-container2" class="info-container">
+        <div>
+            <h2>He's for display only.</h2>
+            <p>Es solo para exhibición.</p>
+        </div>
+    </div>
+
+    <div id="info-container3" class="info-container">
+        <div>
+            <h2>You handle him too much, he's not gonna last.</h2>
+            <p>Lo tomaste demasiado, no va a durar.</p>
+        </div>
+    </div>
+
+    <div id="info-container4" class="info-container">
+        <div>
+            <h2>It's amazing.</h2>
+            <p>Es asombroso.</p>
+        </div>
+    </div>
+
+    <div id="info-container5" class="info-container">
+        <div>
+            <h2>You're a genius.</h2>
+            <p>Es un genio.</p>
+        </div>
+    </div>
+
+    <div id="info-container6" class="info-container">
+        <div>
+            <h2>He's just like new!</h2>
+            <p>¡Está como nuevo!</p>
+        </div>
+    </div>
+    
+    <script>
+        var player;
+        var progressInterval;
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                width: '100%',
+                height: '100%',
+                videoId: '519E3uUpUoU', // Cambia esto por el ID de tu video
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 1,
+                    'showinfo': 0,
+                    'rel': 0,
+                    'fs': 1,
+                    'loop': 0
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            console.log('Reproductor listo');
+            progressInterval = setInterval(updateProgressBar, 500);
+        }
+
+        function togglePlayPause() {
+            if (player.getPlayerState() == 1) {
+                player.pauseVideo();
+            } else {
+                player.playVideo();
+            }
+
+            // Cambiar el texto del botón Play/Pause
+            var playPauseButton = document.getElementById('playPauseButton');
+            playPauseButton.innerText = (player.getPlayerState() == 1) ? 'Continuar' : 'Pausa';
+        }
+
+        function rewind() {
+            var currentTime = player.getCurrentTime();
+            player.seekTo(currentTime - 5, true);
+        }
+
+        function fastForward() {
+            var currentTime = player.getCurrentTime();
+            player.seekTo(currentTime + 5, true);
+        }
+
+        function updateProgressBar() {
+            var currentTime = player.getCurrentTime();
+            var duration = player.getDuration();
+            var progress = (currentTime / duration) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+
+            // Actualizar el tiempo actual
+            document.getElementById('current-time').innerText = formatTime(currentTime);
+
+            // Mostrar el contenedor de información entre el segundo 0 y 3
+            var infoContainer1 = document.getElementById('info-container1');
+            if (currentTime >= 0 && currentTime <= 11) {
+                infoContainer1.style.display = 'block';
+            } else {
+                infoContainer1.style.display = 'none';
+            }
+
+            // Mostrar el contenedor de información entre el segundo 3 y 6
+            var infoContainer2 = document.getElementById('info-container2');
+            if (currentTime > 11 && currentTime <= 13) {
+                infoContainer2.style.display = 'block';
+            } else {
+                infoContainer2.style.display = 'none';
+            }
+
+            // Mostrar el contenedor de información entre el segundo 6 y 7
+            var infoContainer3 = document.getElementById('info-container3');
+            if (currentTime > 13 && currentTime <= 16) {
+                infoContainer3.style.display = 'block';
+            } else {
+                infoContainer3.style.display = 'none';
+            }
+
+            // Mostrar el contenedor de información entre el segundo 7 y 8
+            var infoContainer4 = document.getElementById('info-container4');
+            if (currentTime > 16 && currentTime <= 17) {
+                infoContainer4.style.display = 'block';
+            } else {
+                infoContainer4.style.display = 'none';
+            }
+       
+             // Mostrar el contenedor de información entre el segundo 8 y 9
+            var infoContainer5 = document.getElementById('info-container5');
+            if (currentTime > 17 && currentTime <= 18) {
+                infoContainer5.style.display = 'block';
+            } else {
+                infoContainer5.style.display = 'none';
+            }
+
+            // Mostrar el contenedor de información entre el segundo 10 y 11
+            var infoContainer6 = document.getElementById('info-container6');
+            if (currentTime > 18 && currentTime <= 20) {
+                infoContainer6.style.display = 'block';
+            } else {
+                infoContainer6.style.display = 'none';
+            }            
+        }
+
+        function formatTime(time) {
+            var minutes = Math.floor(time / 60);
+            var seconds = Math.floor(time % 60);
+            return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+        }
+
+         // (Código para que se repita el video)
+
+    function onPlayerStateChange(event) {
+        // Detecta el estado del reproductor al cambiar
+        if (event.data === YT.PlayerState.ENDED) {
+            // Si el video ha terminado, vuelve a reproducir
+            player.seekTo(0); // Ajusta a 0 segundos
+            player.playVideo();
+        }
+    }
+
+    function onPlayerReady(event) {
+        console.log('Reproductor listo');
+        progressInterval = setInterval(updateProgressBar, 500);
+        player.addEventListener('onStateChange', onPlayerStateChange);
+    }
+    </script>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>
