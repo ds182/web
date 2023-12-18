@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transcripción de Voz a Texto</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            flex-direction: column; /* Para que los elementos estén en columna */
+        }
+
+        #headerContainer {
+            background-color: #3734db;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px; /* Espaciado inferior */
+        }
+
+        h1 {
+            color: #fff; /* Color blanco para el título */
+        }
+
+        p {
+            color: #fafafa;
+        }
+
+        #mainContainer {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 20px;
+            background-color: #ff0000;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        button {
+            background-color: #2ecc71;
+            color: #050505;
+            padding: 8px 12px; /* Ajusta el relleno según tu preferencia */
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+            font-size: 14px; /* Ajusta el tamaño de la fuente según tu preferencia */
+            border-radius: 10px; /* Esquinas más redondas */
+        }
+
+        button:disabled {
+            background-color: #0998f8;
+            cursor: not-allowed;
+        }
+
+        #innerContainer {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #transcriptionContainer {
+            border: 1px solid #ffffff;
+            padding: 20px;
+            margin-top: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            height: 100%; /* Establece la altura al 100% */
+        }
+    </style>
+</head>
+<body>
+    <div id="headerContainer">
+        <h1>Introduce yourself</h1>
+        <p>hello</p><p>My name is:_______________</p><p>My favorite color is:___________________</p>
+        <p>My favorite animal is the:___________________</p><p>My favorite hobby is:___________________</p>
+        <p>My favorite food is:___________________</p><p>Thank you for the atention!</p>
+    </div>
+    <div id="mainContainer">
+        <button id="startSpeechRecognition">Iniciar</button>
+        <button id="stopSpeechRecognition" disabled>Detener</button>
+        <button id="clearTranscription" disabled>Borrar</button>
+        <button id="downloadImage" disabled>Descargar</button>
+        <div id="innerContainer">
+            <h2>SPEAKING</h2>
+            <div id="transcriptionContainer">
+                <div id="transcription"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Agrega la librería html2canvas -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+    <script>
+        const startSpeechRecognitionButton = document.getElementById('startSpeechRecognition');
+        const stopSpeechRecognitionButton = document.getElementById('stopSpeechRecognition');
+        const clearTranscriptionButton = document.getElementById('clearTranscription');
+        const downloadImageButton = document.getElementById('downloadImage');
+        const transcriptionContainer = document.getElementById('transcriptionContainer');
+        const transcriptionDiv = document.getElementById('transcription');
+        let recognition = new webkitSpeechRecognition(); // Para navegadores basados en WebKit (Chrome, Safari)
+        let fullTranscript = '';
+
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        recognition.onstart = () => {
+            startSpeechRecognitionButton.disabled = true;
+            stopSpeechRecognitionButton.disabled = false;
+            clearTranscriptionButton.disabled = false;
+            downloadImageButton.disabled = true;
+            transcriptionDiv.innerHTML = 'Escuchando...';
+            fullTranscript = '';
+        };
+
+        recognition.onresult = (event) => {
+            let interimTranscript = '';
+            let finalTranscript = '';
+
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    finalTranscript += event.results[i][0].transcript;
+                } else {
+                    interimTranscript += event.results[i][0].transcript;
+                }
+            }
+
+            transcriptionDiv.innerHTML = `<span style="color: #333;">${fullTranscript + finalTranscript}</span><i style="color: #777;">${interimTranscript}</i>`;
+            fullTranscript += finalTranscript;
+
+            if (fullTranscript) {
+                downloadImageButton.disabled = false;
+            }
+        };
+
+        recognition.onend = () => {
+            startSpeechRecognitionButton.disabled = false;
+            stopSpeechRecognitionButton.disabled = true;
+            clearTranscriptionButton.disabled = false;
+            transcriptionDiv.innerHTML += '<br>Fin de la transcripción.';
+        };
+
+        recognition.onerror = (event) => {
+            console.error('Error de reconocimiento de voz:', event.error);
+        };
+
+        startSpeechRecognitionButton.addEventListener('click', () => {
+            recognition.start();
+        });
+
+        stopSpeechRecognitionButton.addEventListener('click', () => {
+            recognition.stop();
+        });
+
+        clearTranscriptionButton.addEventListener('click', () => {
+            transcriptionDiv.innerHTML = '';
+            fullTranscript = '';
+            downloadImageButton.disabled = true;
+        });
+
+        downloadImageButton.addEventListener('click', () => {
+            // Utiliza html2canvas para convertir el contenedor de la transcripción a una imagen
+            html2canvas(transcriptionContainer).then(canvas => {
+                // Crea un enlace de descarga
+                const link = document.createElement('a');
+                link.download = 'transcription_image.png';
+                link.href = canvas.toDataURL('image/png');
+                // Agrega el enlace al documento y haz clic para iniciar la descarga
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        });
+    </script>
+</body>
+</html>
